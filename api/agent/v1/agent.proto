@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package dragoon.agent.v1;
+
+option go_package = "github.com/okonomipizza/dragoon-sdk/gen/go/agent/v1;agentv1";
+
+// AgentService is the local API exposed by dragoon-agent on a robot or vehicle.
+service AgentService {
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+  rpc ListCameras(ListCamerasRequest) returns (ListCamerasResponse);
+  rpc StartPublish(StartPublishRequest) returns (StartPublishResponse);
+  rpc StopPublish(StopPublishRequest) returns (StopPublishResponse);
+  rpc WatchEvents(WatchEventsRequest) returns (stream AgentEvent);
+}
+
+message Camera {
+  string id = 1;
+  string name = 2;
+  string source = 3;
+  string codec = 4;
+  uint32 width = 5;
+  uint32 height = 6;
+  uint32 framerate = 7;
+}
+
+message GetStatusRequest {}
+
+message GetStatusResponse {
+  bool connected = 1;
+  string agent_version = 2;
+  string active_session = 3;
+  string last_error = 4;
+}
+
+message ListCamerasRequest {}
+
+message ListCamerasResponse {
+  repeated Camera cameras = 1;
+}
+
+message StartPublishRequest {
+  string camera_id = 1;
+  string relay_url = 2;
+  string token = 3;
+  string namespace = 4;
+  string track = 5;
+  uint32 bitrate = 6;
+  uint32 framerate = 7;
+}
+
+message StartPublishResponse {
+  string session_id = 1;
+}
+
+message StopPublishRequest {
+  string session_id = 1;
+}
+
+message StopPublishResponse {}
+
+message WatchEventsRequest {}
+
+message AgentEvent {
+  int64 unix_millis = 1;
+  string session_id = 2;
+  string kind = 3;
+  string message = 4;
+}

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package dragoon.control.v1;
+
+option go_package = "github.com/okonomipizza/dragoon-sdk/gen/go/control/v1;controlv1";
+
+// ControlService is the remote API used by operator tools and viewer clients.
+service ControlService {
+  rpc GetServerInfo(GetServerInfoRequest) returns (GetServerInfoResponse);
+  rpc IssueViewerToken(IssueViewerTokenRequest) returns (IssueViewerTokenResponse);
+}
+
+message GetServerInfoRequest {}
+
+message GetServerInfoResponse {
+  string version = 1;
+  string moqt_protocol = 2;
+  string region = 3;
+}
+
+message IssueViewerTokenRequest {
+  string room = 1;
+  repeated string tracks = 2;
+  string subject = 3;
+}
+
+message IssueViewerTokenResponse {
+  string token = 1;
+  int64 expires_at_unix = 2;
+  string relay_url = 3;
+}

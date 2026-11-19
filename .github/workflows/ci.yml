@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install protoc
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+      - name: Validate API contracts
+        run: |
+          protoc -I api \
+            --descriptor_set_out=/tmp/dragoon-sdk-api.pb \
+            api/control/v1/control.proto \
+            api/agent/v1/agent.proto
